@@ -21,7 +21,7 @@ export default function Footer() {
       </div>
       <div className="max-w-6xl mx-auto mt-12 pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between gap-4 text-xs text-slate-500">
         <p>
-          © 2026 CampusVote - COMSELEC BISU Bilar Campus. All Rights Reserved.
+          © 2026 CampusVote - Paul Jr. E. Salarda. All Rights Reserved.
         </p>
         <div className="flex gap-6">
           <a href="#" className="hover:text-white transition">

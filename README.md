@@ -1,16 +1,72 @@
-# React + Vite
+# CampusVote
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+CampusVote is a secure, transparent, and efficient electronic voting platform for student elections at COMSELEC - BISU Bilar Campus. It provides separate workflows for students casting ballots and administrators managing elections.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Student login and election eligibility checks
+- Guided ballot flow with voting instructions
+- Candidate profiles, platforms, and photos
+- Ballot review before final submission
+- Voting confirmation receipts
+- Admin dashboard with election statistics
+- Management for students, elections, positions, candidates, and results
+- Supabase Authentication, database, storage, and Edge Functions
 
-## React Compiler
+## Tech stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- React 19
+- Vite
+- React Router
+- Tailwind CSS
+- Supabase
+- Lucide React
 
-## Expanding the ESLint configuration
+## Getting started
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Prerequisites
+
+- Node.js 18 or later
+- A Supabase project configured for the CampusVote database and Edge Functions
+
+### Installation
+
+```bash
+npm install
+```
+
+```bash
+npm run dev
+```
+
+Vite will print the local URL in the terminal.
+
+## Available scripts
+
+| Command | Description |
+| --- | --- |
+| `npm run dev` | Start the development server |
+| `npm run build` | Create a production build |
+| `npm run preview` | Preview the production build locally |
+| `npm run lint` | Run ESLint |
+
+## Project structure
+
+```text
+
+├── components/     Reusable UI and protected-route components
+├── lib/            Supabase client configuration
+├── pages/          Public, student, and admin pages
+├── App.jsx         Application routes
+└── main.jsx        React entry point
+```
+
+## Development notes
+
+- Never commit `.env.local` or Supabase credentials.
+- Keep authorization and voting rules enforced by the Supabase backend and Edge Functions, not only by client-side checks.
+- Run `npm run lint` and `npm run build` before submitting changes.
+
+## License
+
+This project is maintained for the CampusVote student election system.

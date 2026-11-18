@@ -10,8 +10,8 @@ export default function AboutSection() {
         </h2>
         <p className="text-lg text-slate-400 leading-relaxed mb-8 max-w-2xl mx-auto">
           CampusVote is a secure, transparent, and efficient electronic voting
-          platform designed for student elections at COMSELEC - BISU Bilar
-          Campus. Our mission is to empower fair and transparent student
+          platform designed for student elections at BISU Bilar Campus.
+          Our mission is to empower fair and transparent student
           elections through modern digital tooling.
         </p>
         <div className="flex flex-col md:flex-row justify-center gap-6 max-w-lg mx-auto">
