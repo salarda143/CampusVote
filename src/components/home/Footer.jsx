@@ -9,7 +9,7 @@ export default function Footer() {
           <div>
             <div className="font-bold">CampusVote</div>
             <div className="text-xs text-blue-400">
-              COMSELEC - BISU BILAR CAMPUS
+              BISU BILAR CAMPUS
             </div>
           </div>
         </div>
