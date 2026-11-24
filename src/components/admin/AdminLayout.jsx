@@ -12,6 +12,7 @@ import {
   LogOut,
   Menu,
   X,
+  AlertTriangle,
 } from "lucide-react";
 
 const links = [
@@ -26,9 +27,28 @@ const links = [
 export default function AdminLayout() {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [logoutConfirmOpen, setLogoutConfirmOpen] = useState(false);
+  const [loggingOut, setLoggingOut] = useState(false);
+  const [logoutError, setLogoutError] = useState("");
 
-  async function logout() {
-    await supabase.auth.signOut();
+  function openLogoutConfirmation() {
+    setSidebarOpen(false);
+    setLogoutError("");
+    setLogoutConfirmOpen(true);
+  }
+
+  async function confirmLogout() {
+    setLoggingOut(true);
+    setLogoutError("");
+
+    const { error } = await supabase.auth.signOut();
+
+    if (error) {
+      setLogoutError(error.message || "Unable to log out. Please try again.");
+      setLoggingOut(false);
+      return;
+    }
+
     navigate("/");
   }
 
@@ -76,7 +96,8 @@ export default function AdminLayout() {
 
         <div className="border-t border-slate-800 px-3 py-4">
           <button
-            onClick={logout}
+            type="button"
+            onClick={openLogoutConfirmation}
             className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-slate-300 transition hover:bg-slate-800 hover:text-white"
           >
             <LogOut size={18} />
@@ -149,7 +170,8 @@ export default function AdminLayout() {
 
         <div className="border-t border-slate-800 px-3 py-4">
           <button
-            onClick={logout}
+            type="button"
+            onClick={openLogoutConfirmation}
             className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-slate-300 transition hover:bg-slate-800 hover:text-white"
           >
             <LogOut size={18} />
@@ -162,6 +184,65 @@ export default function AdminLayout() {
       <main className="min-w-0 p-4 sm:p-6 md:ml-64 md:p-8">
         <Outlet />
       </main>
+
+      {logoutConfirmOpen && (
+        <div
+          className="fixed inset-0 'z-70' flex items-center justify-center bg-slate-950/70 p-4"
+          role="presentation"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget && !loggingOut) {
+              setLogoutConfirmOpen(false);
+            }
+          }}
+        >
+          <section
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="logout-confirm-title"
+            aria-describedby="logout-confirm-description"
+            className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl"
+          >
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-red-100 text-red-600">
+              <AlertTriangle size={28} />
+            </div>
+            <h2
+              id="logout-confirm-title"
+              className="mt-4 text-center text-xl font-bold text-slate-900"
+            >
+              Confirm Logout
+            </h2>
+            <p
+              id="logout-confirm-description"
+              className="mt-2 text-center text-sm leading-relaxed text-slate-600"
+            >
+              Are you sure you want to log out of the admin panel?
+            </p>
+            {logoutError && (
+              <p className="mt-4 rounded-lg bg-red-50 p-3 text-sm text-red-700">
+                {logoutError}
+              </p>
+            )}
+            <div className="mt-6 grid grid-cols-2 gap-3">
+              <button
+                type="button"
+                onClick={() => setLogoutConfirmOpen(false)}
+                disabled={loggingOut}
+                className="rounded-xl border border-slate-300 px-4 py-3 font-semibold text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={confirmLogout}
+                disabled={loggingOut}
+                className="rounded-xl bg-red-600 px-4 py-3 font-semibold text-white hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {loggingOut ? "Logging out..." : "Yes, Logout"}
+              </button>
+            </div>
+          </section>
+        </div>
+      )}
     </div>
   );
 }

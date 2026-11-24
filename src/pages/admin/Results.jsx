@@ -68,13 +68,13 @@ export default function Results() {
     setLoadingElections(false);
   }, []);
 
-  const loadResults = useCallback(async (electionId) => {
+  const loadResults = useCallback(async (electionId, { silent = false } = {}) => {
     if (!electionId) {
       setResults(null);
       return;
     }
 
-    setLoadingResults(true);
+    if (!silent) setLoadingResults(true);
     setError("");
 
     try {
@@ -102,7 +102,7 @@ export default function Results() {
       setResults(null);
       setError(err.message || "Unable to load election results.");
     } finally {
-      setLoadingResults(false);
+      if (!silent) setLoadingResults(false);
     }
   }, []);
 
@@ -112,6 +112,50 @@ export default function Results() {
 
   useEffect(() => {
     loadResults(selectedElectionId);
+  }, [selectedElectionId, loadResults]);
+
+  // Subscribe to new ballot records and silently reload the aggregate results.
+  // The debounce combines the ballot-selection and participation events from one submission.
+  useEffect(() => {
+    if (!selectedElectionId) return undefined;
+
+    let refreshTimer;
+
+    const refreshResults = () => {
+      window.clearTimeout(refreshTimer);
+      refreshTimer = window.setTimeout(() => {
+        loadResults(selectedElectionId, { silent: true });
+      }, 300);
+    };
+
+    const channel = supabase
+      .channel(`live-election-results-${selectedElectionId}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "ballot_selections",
+          filter: `election_id=eq.${selectedElectionId}`,
+        },
+        refreshResults
+      )
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "voting_participation",
+          filter: `election_id=eq.${selectedElectionId}`,
+        },
+        refreshResults
+      )
+      .subscribe();
+
+    return () => {
+      window.clearTimeout(refreshTimer);
+      supabase.removeChannel(channel);
+    };
   }, [selectedElectionId, loadResults]);
 
   const refreshAll = async () => {

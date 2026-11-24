@@ -40,3 +40,71 @@ button:disabled {
 #root {
   min-height: 100vh;
 }
+
+@keyframes hero-text-reveal {
+  0% {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes hero-gradient-shift {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes hero-letter-reveal {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  30%,
+  75% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+.hero-text-reveal {
+  animation: hero-text-reveal 800ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.hero-gradient-text {
+  background-size: 200% 200%;
+  animation: hero-gradient-shift 3s ease-in-out infinite;
+}
+
+.hero-letter {
+  display: inline-block;
+  opacity: 0;
+  animation: hero-letter-reveal 2.4s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+
+.hero-heading {
+  display: inline;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-text-reveal,
+  .hero-gradient-text,
+  .hero-letter {
+    animation: none;
+  }
+
+  .hero-letter {
+    opacity: 1;
+  }
+}
